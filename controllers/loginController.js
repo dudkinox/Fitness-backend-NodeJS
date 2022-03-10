@@ -26,7 +26,7 @@ const login = async (req, res, next) => {
 
   const data = await account.get();
   if (data.empty) {
-    return res.status(404).send("ไม่พบบัญชี");
+    return res.status(404).send(false);
   } else {
     return res.status(200).send(data.docs[0].data());
   }
