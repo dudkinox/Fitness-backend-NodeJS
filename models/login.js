@@ -1,7 +1,10 @@
 class Account {
-    constructor(id, username, password, type) {
+    constructor(id, firstname,lastname,tel,email, password, type) {
         this.id = id;
-        this.username = username;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.tel = tel;
+        this.email = email;
         this.password = password;
         this.type = type;
     }

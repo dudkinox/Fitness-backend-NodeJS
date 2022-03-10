@@ -1,6 +1,6 @@
 const express = require("express");
 const {
-  addAccount,
+  register,
   getAllAccount,
   getAccount,
   updateAccount,
@@ -11,11 +11,11 @@ const {
 const router = express.Router();
 
 router.get("/user/:email/:password", login);
-// router.post("/login", addAccount);
-// router.get('/login', getAllAccount);
-// router.get('/login/:id', getAccount);
-// router.put('/login/:id', updateAccount);
-// router.delete('/login/:id', deleteAccount);
+router.post("/user/register", register);
+router.get('/user', getAllAccount);
+router.get('/user/:id', getAccount);
+router.put('/user/:id', updateAccount);
+router.delete('/user/:id', deleteAccount);
 
 module.exports = {
   routes: router,
