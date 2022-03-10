@@ -1,0 +1,85 @@
+import firebase from '@firebase/app';
+import { Q as Qa, x as xu, L, B as Ba, G as Ga, z as za, J as Ja, t as th, n as nh, e as eh, i as ih, r as rh, c as ch, u as uh, W as Wa, I as Iu, A as Au, U as Ua } from './prebuilt.rn-e929e0af.js';
+import { Component } from '@firebase/component';
+import '@firebase/util';
+import '@firebase/logger';
+import '@firebase/webchannel-wrapper';
+
+const name = "@firebase/firestore";
+const version = "2.4.1";
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const firestoreNamespace = {
+    Firestore: Qa,
+    GeoPoint: xu,
+    Timestamp: L,
+    Blob: Ba,
+    Transaction: Ga,
+    WriteBatch: za,
+    DocumentReference: Ja,
+    DocumentSnapshot: th,
+    Query: nh,
+    QueryDocumentSnapshot: eh,
+    QuerySnapshot: ih,
+    CollectionReference: rh,
+    FieldPath: ch,
+    FieldValue: uh,
+    setLogLevel: Wa,
+    CACHE_SIZE_UNLIMITED: Iu
+};
+/**
+ * Configures Firestore as part of the Firebase SDK by calling registerService.
+ *
+ * @param firebase - The FirebaseNamespace to register Firestore with
+ * @param firestoreFactory - A factory function that returns a new Firestore
+ *    instance.
+ */
+function configureForFirebase(firebase, firestoreFactory) {
+    firebase.INTERNAL.registerComponent(new Component('firestore', container => {
+        const app = container.getProvider('app').getImmediate();
+        return firestoreFactory(app, container.getProvider('auth-internal'));
+    }, "PUBLIC" /* PUBLIC */).setServiceProps(Object.assign({}, firestoreNamespace)));
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Registers the memory-only Firestore build with the components framework.
+ */
+function registerFirestore(instance) {
+    configureForFirebase(instance, (app, auth) => new Qa(app, new Au(app, auth), new Ua()));
+    instance.registerVersion(name, version);
+}
+registerFirestore(firebase);
+
+export { registerFirestore };
+//# sourceMappingURL=index.js.map
