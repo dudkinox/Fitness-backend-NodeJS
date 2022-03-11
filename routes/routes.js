@@ -9,6 +9,12 @@ const {
   deleteAccount,
   //forgotPassword
   forgotPassword,
+  //Fitness Class
+  addClass,
+  deleteClass,
+  //Fitness SubClass
+  //Fitness Subcribe
+  updateSubcribe,
 } = require("../controllers/mainController");
 
 const router = express.Router();
@@ -24,10 +30,13 @@ router.delete('/user/:id', deleteAccount);
 //forgotPassword
 router.post('/forgot', forgotPassword);
 
-//Fitness
-router.post("/fitness/add", register);
+//Fitness_Class
+router.post('/fitness/class/add', addClass);
+router.delete('/fitness/class/:id', deleteClass);
+//Fitness_SubClass
 
-
+//Fitness_Subcribe
+router.put('/fitness/subcribe/:id', updateSubcribe);
 
 module.exports = {
   routes: router,

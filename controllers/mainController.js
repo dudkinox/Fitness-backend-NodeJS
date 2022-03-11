@@ -219,6 +219,55 @@ const forgotPassword = async (req, res, next) => {
   }
 };
 
+// Fitness Class
+
+const addClass = async (req, res, next) => {
+  try {
+    const data = req.body;
+    console.log(data.firstname);
+    const hashPassword = md5(data.password);
+    const newdata = {
+      firstname: data.firstname,
+      lastname: data.lastname,
+      tel: data.tel,
+      email: data.email,
+      password: hashPassword,
+      type: data.type,
+    };
+
+    await firestore.collection("user").doc().set(newdata);
+    res.status(404).send("เพิ่มบัญชีสำเร็จ");
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
+const deleteClass = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    await firestore.collection("classfitness").doc(id).delete();
+    res.send("ลบสำเร็จ");
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
+// Fitness SubClass
+
+// Fitness Subscribe
+
+const updateSubcribe = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const data = req.body;
+    const subscribe = await firestore.collection("subscribes").doc(id);
+    await subscribe.update(data);
+    res.send("แก้ไขข้อมูลแล้ว");
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
 module.exports = {
   //login
   login,
@@ -229,4 +278,10 @@ module.exports = {
   deleteAccount,
   //forgotPassword
   forgotPassword,
+  //fitnessClass
+  addClass,
+  deleteClass,
+  //fitnessSubClass
+  //fitnessSubcribe
+  updateSubcribe,
 };
