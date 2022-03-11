@@ -12,7 +12,10 @@ const {
   //Fitness Class
   addClass,
   deleteClass,
+  updateClass,
   //Fitness SubClass
+  deleteSubClass,
+  updateSubClass,
   //Fitness Subcribe
   updateSubcribe,
 } = require("../controllers/mainController");
@@ -33,8 +36,10 @@ router.post('/forgot', forgotPassword);
 //Fitness_Class
 router.post('/fitness/class/add', addClass);
 router.delete('/fitness/class/:id', deleteClass);
+router.put('/fitness/class/:id', updateClass);
 //Fitness_SubClass
-
+router.delete('/fitness/subclass/:id', deleteSubClass);
+router.put('/fitness/subclass/:id', updateSubClass);
 //Fitness_Subcribe
 router.put('/fitness/subcribe/:id', updateSubcribe);
 

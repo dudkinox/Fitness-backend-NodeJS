@@ -84,12 +84,12 @@ const getAllAccount = async (req, res, next) => {
     } else {
       data.forEach((doc) => {
         const account = {
-          id:doc.id,
-          firstname:doc.data().firstname,
-          lastname:doc.data().lastname,
-          email:doc.data().email,
-          tel:doc.data().tel,
-          type:doc.data().type
+          id: doc.id,
+          firstname: doc.data().firstname,
+          lastname: doc.data().lastname,
+          email: doc.data().email,
+          tel: doc.data().tel,
+          type: doc.data().type,
         };
         AccountArray.push(account);
       });
@@ -224,21 +224,10 @@ const forgotPassword = async (req, res, next) => {
 const addClass = async (req, res, next) => {
   try {
     const data = req.body;
-    console.log(data.firstname);
-    const hashPassword = md5(data.password);
-    const newdata = {
-      firstname: data.firstname,
-      lastname: data.lastname,
-      tel: data.tel,
-      email: data.email,
-      password: hashPassword,
-      type: data.type,
-    };
-
-    await firestore.collection("user").doc().set(newdata);
-    res.status(404).send("เพิ่มบัญชีสำเร็จ");
+    await firestore.collection("classfitness").doc().set(data);
+    res.status(400).send("เพิ่มบัญชีสำเร็จ");
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(404).send(error.message);
   }
 };
 
@@ -248,11 +237,60 @@ const deleteClass = async (req, res, next) => {
     await firestore.collection("classfitness").doc(id).delete();
     res.send("ลบสำเร็จ");
   } catch (error) {
+    res.status(404).send(error.message);
+  }
+};
+
+const updateClass = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const data = req.body;
+    const subscribe = await firestore.collection("classfitness").doc(id);
+    await subscribe.update(data);
+    res.send("แก้ไขข้อมูลแล้ว");
+  } catch (error) {
     res.status(400).send(error.message);
   }
 };
 
 // Fitness SubClass
+
+const deleteSubClass = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    await firestore.collection("subclass").doc(id).delete();
+    res.send("ลบสำเร็จ");
+  } catch (error) {
+    res.status(404).send(error.message);
+  }
+};
+
+const updateSubClass = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const data = req.body;
+    var classname = "";
+    var time = "";
+    var arrayTime = [];
+    const resultdata = await firestore.collection("subclass").doc(id);
+    const response = await resultdata.get();
+    const result = response.data();
+    if (data.classname !== undefined) {
+      classname = data.classname;
+      result.classname = classname;
+    }
+    if (data.time !== undefined) {
+      time = data.time;
+      arrayTime = response.data().time;
+      arrayTime.push(time);
+      result.time = arrayTime;
+    }
+    await resultdata.update(result);
+    return res.status(200).send("แก้ไขข้อมูลแล้ว");
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
 
 // Fitness Subscribe
 
@@ -281,7 +319,10 @@ module.exports = {
   //fitnessClass
   addClass,
   deleteClass,
+  updateClass,
   //fitnessSubClass
+  deleteSubClass,
+  updateSubClass,
   //fitnessSubcribe
   updateSubcribe,
 };
