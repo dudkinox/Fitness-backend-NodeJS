@@ -1,7 +1,12 @@
 "use strict";
 
 const firebase = require("../db");
-const Account = require("../models/login");
+const {
+  Account,
+  ClassFitness,
+  SubClassFitness,
+  Subcribe,
+} = require("../models/main");
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 const firestore = firebase.firestore();
@@ -221,11 +226,34 @@ const forgotPassword = async (req, res, next) => {
 
 // Fitness Class
 
+const getallclass = async (req, res, next) => {
+  try {
+    const fitness = await firestore.collection("classfitness");
+    const data = await fitness.get();
+    const AccountArray = [];
+    if (data.empty) {
+      res.status(404).send("ไม่พบข้อมูลใด");
+    } else {
+      data.forEach((doc) => {
+        const fitness = new ClassFitness(
+          doc.id,
+          doc.data().classname,
+          doc.data().amount
+        );
+        AccountArray.push(fitness);
+      });
+      res.send(AccountArray);
+    }
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
 const addClass = async (req, res, next) => {
   try {
     const data = req.body;
     await firestore.collection("classfitness").doc().set(data);
-    res.status(400).send("เพิ่มบัญชีสำเร็จ");
+    res.status(200).send("เพิ่มบัญชีสำเร็จ");
   } catch (error) {
     res.status(404).send(error.message);
   }
@@ -235,7 +263,7 @@ const deleteClass = async (req, res, next) => {
   try {
     const id = req.params.id;
     await firestore.collection("classfitness").doc(id).delete();
-    res.send("ลบสำเร็จ");
+    res.status(200).send("ลบสำเร็จ");
   } catch (error) {
     res.status(404).send(error.message);
   }
@@ -247,7 +275,7 @@ const updateClass = async (req, res, next) => {
     const data = req.body;
     const subscribe = await firestore.collection("classfitness").doc(id);
     await subscribe.update(data);
-    res.send("แก้ไขข้อมูลแล้ว");
+    res.status(200).send("แก้ไขข้อมูลแล้ว");
   } catch (error) {
     res.status(400).send(error.message);
   }
@@ -255,11 +283,67 @@ const updateClass = async (req, res, next) => {
 
 // Fitness SubClass
 
+const addSubClass = async (req, res, next) => {
+  try {
+    const data = req.body;
+    await firestore.collection("subclass").doc().set(data);
+    res.status(200).send("เพิ่มบัญชีสำเร็จ");
+  } catch (error) {
+    res.status(404).send(error.message);
+  }
+};
+
+const getallsubclass = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const fitness = await firestore
+      .collection("subclass")
+      .where("idfitness", "==", id);
+    const data = await fitness.get();
+    const AccountArray = [];
+    if (data.empty) {
+      res.status(404).send("ไม่พบข้อมูลใด");
+    } else {
+      data.forEach((doc) => {
+        const fitness = new SubClassFitness(
+          doc.id,
+          doc.data().classname,
+          doc.data().amount,
+          doc.data().time
+        );
+        AccountArray.push(fitness);
+      });
+      res.send(AccountArray);
+    }
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
+const deleteTimeSubClass = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const index = req.params.index;
+
+    const response = firestore.collection("subclass").doc(id);
+    const data = await response.get();
+
+    var result = data.data();
+    result.time.splice(index, 1);
+
+    await response.update(result);
+
+    res.status(200).send("อัพเดตข้อมูลสำเร็จ");
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
 const deleteSubClass = async (req, res, next) => {
   try {
     const id = req.params.id;
     await firestore.collection("subclass").doc(id).delete();
-    res.send("ลบสำเร็จ");
+    res.status(200).send("ลบสำเร็จ");
   } catch (error) {
     res.status(404).send(error.message);
   }
@@ -294,13 +378,47 @@ const updateSubClass = async (req, res, next) => {
 
 // Fitness Subscribe
 
+const getSubcribe = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const fitness = await firestore
+      .collection("subscribes")
+      .where("idsubclass", "==", id);
+    const data = await fitness.get();
+    const AccountArray = [];
+    if (data.empty) {
+      res.status(404).send("ไม่พบข้อมูลใด");
+    } else {
+      data.forEach(async (doc) => {
+        const iduser = doc.data().iduser;
+        const user = await firestore.collection("user").doc(iduser);
+        const result = await user.get();
+        const fitnessdata = {
+          id: doc.id,
+          status: doc.data().status,
+          time: doc.data().time,
+          email: result.data().email,
+          firstname: result.data().firstname,
+          lastname: result.data().lastname,
+          tel: result.data().tel,
+        };
+        AccountArray.push(fitnessdata);
+        console.log(AccountArray);
+      });
+      res.status(200).send(AccountArray);
+    }
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
 const updateSubcribe = async (req, res, next) => {
   try {
     const id = req.params.id;
     const data = req.body;
     const subscribe = await firestore.collection("subscribes").doc(id);
     await subscribe.update(data);
-    res.send("แก้ไขข้อมูลแล้ว");
+    res.status(200).send("แก้ไขข้อมูลแล้ว");
   } catch (error) {
     res.status(400).send(error.message);
   }
@@ -316,13 +434,19 @@ module.exports = {
   deleteAccount,
   //forgotPassword
   forgotPassword,
+
   //fitnessClass
+  getallclass,
   addClass,
   deleteClass,
   updateClass,
   //fitnessSubClass
+  addSubClass,
+  getallsubclass,
+  deleteTimeSubClass,
   deleteSubClass,
   updateSubClass,
   //fitnessSubcribe
+  getSubcribe,
   updateSubcribe,
 };
