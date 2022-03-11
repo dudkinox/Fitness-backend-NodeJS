@@ -18,11 +18,14 @@ router.get("/user/:email/:password", login);
 router.post("/user/register", register);
 router.get('/user/:id', getAccount);
 router.get('/user', getAllAccount);
-// router.put('/user/:id', updateAccount);
-// router.delete('/user/:id', deleteAccount);
+router.put('/user/:id', updateAccount);
+router.delete('/user/:id', deleteAccount);
 
 //forgotPassword
 router.post('/forgot', forgotPassword);
+
+//Fitness
+router.post("/fitness/add", register);
 
 
 

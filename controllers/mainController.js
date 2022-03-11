@@ -104,7 +104,7 @@ const updateAccount = async (req, res, next) => {
   try {
     const id = req.params.id;
     const data = req.body;
-    const Account = await firestore.collection("login").doc(id);
+    const Account = await firestore.collection("user").doc(id);
     await Account.update(data);
     res.send("แก้ไขข้อมูลแล้ว");
   } catch (error) {
@@ -115,7 +115,7 @@ const updateAccount = async (req, res, next) => {
 const deleteAccount = async (req, res, next) => {
   try {
     const id = req.params.id;
-    await firestore.collection("login").doc(id).delete();
+    await firestore.collection("user").doc(id).delete();
     res.send("ลบสำเร็จ");
   } catch (error) {
     res.status(400).send(error.message);
