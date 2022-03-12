@@ -385,27 +385,36 @@ const getSubcribe = async (req, res, next) => {
       .collection("subscribes")
       .where("idsubclass", "==", id);
     const data = await fitness.get();
-    const AccountArray = [];
+    const resultold = [];
+    const resultnew = [];
     if (data.empty) {
       res.status(404).send("ไม่พบข้อมูลใด");
     } else {
-      data.forEach(async (doc) => {
-        const iduser = doc.data().iduser;
-        const user = await firestore.collection("user").doc(iduser);
-        const result = await user.get();
+      data.forEach((doc) => {
         const fitnessdata = {
           id: doc.id,
           status: doc.data().status,
           time: doc.data().time,
+          iduser: doc.data().iduser,
+        };
+        resultold.push(fitnessdata);
+      });
+      for (var i = 0; i < resultold.length; i++) {
+        const id = resultold[i].iduser;
+        const user = await firestore.collection("user").doc(id);
+        const result = await user.get();
+        const fitnessnewdata = {
+          id: resultold[i].id,
+          status: resultold[i].status,
+          time: resultold[i].time,
           email: result.data().email,
           firstname: result.data().firstname,
           lastname: result.data().lastname,
           tel: result.data().tel,
         };
-        AccountArray.push(fitnessdata);
-        console.log(AccountArray);
-      });
-      res.status(200).send(AccountArray);
+        resultnew.push(fitnessnewdata);
+      }
+      res.status(200).send(resultnew);
     }
   } catch (error) {
     res.status(400).send(error.message);
