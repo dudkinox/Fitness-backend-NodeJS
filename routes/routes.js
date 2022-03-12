@@ -33,7 +33,10 @@ const {
 } = require("../controllers/orderController");
 
 const { getClass } = require("../controllers/adminController");
-const { getNotification } = require("../controllers/notificationController");
+const {
+  getNotification,
+  getNotificationEnd,
+} = require("../controllers/notificationController");
 
 const router = express.Router();
 
@@ -75,6 +78,7 @@ router.put("/fitness/subcribe/:id", updateSubcribe);
 
 // notification
 router.get("/notification/:id", getNotification);
+router.get("/notification/end/:id", getNotificationEnd);
 
 // addmin
 router.get("/admin/class", getClass);
