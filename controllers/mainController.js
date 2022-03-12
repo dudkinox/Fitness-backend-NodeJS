@@ -249,6 +249,32 @@ const getallclass = async (req, res, next) => {
   }
 };
 
+const getrecommend = async (req, res, next) => {
+  try {
+    const fitness = await firestore
+      .collection("classfitness")
+      .orderBy("amount", "desc")
+      .limit(4);
+    const data = await fitness.get();
+    const AccountArray = [];
+    if (data.empty) {
+      res.status(404).send("ไม่พบข้อมูลใด");
+    } else {
+      data.forEach((doc) => {
+        const fitness = new ClassFitness(
+          doc.id,
+          doc.data().classname,
+          doc.data().amount
+        );
+        AccountArray.push(fitness);
+      });
+      res.status(200).send(AccountArray);
+    }
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
 const addClass = async (req, res, next) => {
   try {
     const data = req.body;
@@ -446,6 +472,7 @@ module.exports = {
 
   //fitnessClass
   getallclass,
+  getrecommend,
   addClass,
   deleteClass,
   updateClass,

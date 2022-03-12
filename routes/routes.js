@@ -11,6 +11,7 @@ const {
   forgotPassword,
   //Fitness Class
   getallclass,
+  getrecommend,
   addClass,
   deleteClass,
   updateClass,
@@ -56,16 +57,17 @@ router.post("/forgot", forgotPassword);
 
 //Fitness_Class
 router.get("/fitness/class", getallclass);
+router.get("/fitness/class/recommend", getrecommend);
 router.post("/fitness/class/add", addClass);
 router.delete("/fitness/class/:id", deleteClass);
 router.put("/fitness/class/:id", updateClass);
 
 //Fitness_SubClass
-router.post("/fitness/subclass/add", addSubClass);
 router.get("/fitness/subclass/:id", getallsubclass);
+router.post("/fitness/subclass/add", addSubClass);
 router.put("/fitness/subclass/:id/:index", deleteTimeSubClass);
-router.delete("/fitness/subclass/:id", deleteSubClass);
 router.put("/fitness/subclass/:id", updateSubClass);
+router.delete("/fitness/subclass/:id", deleteSubClass);
 
 //Fitness_Subcribe
 router.get("/fitness/subcribe/:id", getSubcribe);
