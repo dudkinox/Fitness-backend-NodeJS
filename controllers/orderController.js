@@ -65,7 +65,8 @@ const getAllHistory = async (req, res, next) => {
     fetchSubscribes.forEach(doc => {
       const result = {
         idsubclass: doc.data().idsubclass,
-        time: doc.data().time
+        time: doc.data().time,
+        status: doc.data().status
       }
       dataoldarray.push(result)
     })
@@ -76,7 +77,8 @@ const getAllHistory = async (req, res, next) => {
       const newdata = await data.get()
       const result = {
         classname: newdata.data().classname,
-        time: dataoldarray[i].time
+        time: dataoldarray[i].time,
+        stats: dataoldarray[i].status
       }
       datanewarray.push(result)
     }
